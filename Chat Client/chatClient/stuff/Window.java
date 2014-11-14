@@ -1,51 +1,75 @@
 package stuff;
 
-import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.*;
+import java.awt.event.*;
 
 import javax.swing.*;
+import javax.swing.border.EtchedBorder;
+import javax.swing.border.TitledBorder;
 
-public class Window 
+public class Window implements Runnable 
 {
-	private NetwokConnection network;
+	private NetworkConnection network;
 	private JFrame frame;
-	private JTextArea userText;
+	private JTextArea userText, chatText;
 	private JLabel chat;
-	private JRadioButton textButton;
-	private JPanel panel;
+	private JButton textButton;
 	
-	public Window()
+	public Window(NetworkConnection network)
 	{
 		this.network = network;
 		frame = new JFrame();
-		userText = new JTextArea();
-		userText.
-		userText.setSize(200, 200);
+		frame.setSize(300, 400);
+
 		chat = new JLabel();
-		textButton = new JRadioButton();
-				
-		frame.add(textButton, BorderLayout.SOUTH);
 		
+		createUserText();
+		createChatText();
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
-		frame.setSize(300, 400);
+		
+		
+
 	}
 	
 	public void createUserText()
+	{
+		textButton = new JButton();
+		userText = new JTextArea();
+		
+
+		
+		JPanel panel = new JPanel();
+		panel.setLayout(new GridLayout(1, 2));
+		panel.add(userText);
+		panel.add(textButton);
+		textButton.addActionListener(new ChatListener());
+		panel.setBorder(new TitledBorder(new EtchedBorder(), "Enter Chat"));
+		
+		frame.add(panel, BorderLayout.SOUTH);
+	}
+	
+	public void createChatText()
+	{
+		JPanel panel = new JPanel();
+		chatText = new JTextArea();
+		chatText.setEditable(false);
+		panel.add(chatText);
+		frame.add(chatText);
+	}
+
+	public void run() 
 	{
 		class ChatListener implements ActionListener
 		{
 			public void actionPerformed(ActionEvent arg0) 
 			{
-//				network.setText(userText.getText());
+				if(userText.getText().length() > 0)
+					chatText.insert(userText.getText(), 1);
+//					chatText.setText(chatText.getText() + ">" + userText.getText() + "\n");
+				userText.setText("");
 			}
 		}
-		panel = new JPanel();
 		textButton.addActionListener(new ChatListener());
-		panel.add(userText);
-		panel.add(textButton);
-		
-		frame.add(panel, BorderLayout.SOUTH);
 	}
 }

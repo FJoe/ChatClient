@@ -3,14 +3,14 @@ package stuff;
 import java.io.*;
 import java.net.Socket;
 import java.util.*;
-public class NetwokConnection {
+public class NetworkConnection {
 	
 	private Socket socket;
 	private Scanner in;
 	private PrintWriter out;
 	private String command;
 	
-	public NetwokConnection(String host, int port) throws IOException
+	public NetworkConnection(String host, int port) throws IOException
 	{
 		socket = new Socket(host, port);
 		InputStream inStream = socket.getInputStream();
