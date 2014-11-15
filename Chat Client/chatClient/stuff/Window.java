@@ -25,43 +25,29 @@ public class Window implements Runnable
 		
 		createUserText();
 		createChatText();
+		
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
 	}
 	
-	public void createUserText()
+	private void createUserText()
 	{
-		final int TEXT_ROWS = 2;
+		final int TEXT_ROWS = 3;
 		final int TEXT_COLUMNS = 17;
 		userText = new JTextArea(TEXT_ROWS, TEXT_COLUMNS);
 		JScrollPane scrollPane = new JScrollPane(userText);
 		
 		textButton = new JButton("Send");
-		
-		class ChatListener implements ActionListener
-		{
-			public void actionPerformed(ActionEvent arg0) 
-			{
-				if(userText.getText().length() > 0)
-					chatText.append(">" + userText.getText() + "\n");
-				
-				userText.setText("");
-			}
-		}
-		textButton.addActionListener(new ChatListener());
-		
+
 		JPanel panel = new JPanel();
 		panel.add(scrollPane);
 		panel.add(textButton);
-
-		
-		textButton.addActionListener(new ChatListener());
 		panel.setBorder(new TitledBorder(new EtchedBorder(), "Enter Chat"));
 		
 		frame.add(panel, BorderLayout.SOUTH);
 	}
 	
-	public void createChatText()
+	private void createChatText()
 	{
 		chatText = new JTextArea();
 		chatText.setEditable(false);
@@ -71,6 +57,37 @@ public class Window implements Runnable
 
 	public void run() 
 	{
-
+		class ChatListener implements ActionListener
+		{
+			public void actionPerformed(ActionEvent arg0) 
+			{
+				String text = userText.getText();
+				if(text.length() > 0)
+				{
+					if(text.charAt(0) == '/')
+					{
+						String command;
+						if(text.contains(" "))
+							command = text.substring(0, text.indexOf(" "));
+						else
+							command = text;
+						
+						/*
+						 * FIX THIS METHOD NAME
+						 */
+						network.runCommnad(command);
+					}
+					else
+						network.sendMsg(text);
+				}
+				
+//				if(userText.getText().length() > 0)
+//					chatText.append(">" + userText.getText() + "\n");
+				
+				userText.setText("");
+			}
+		}
+		
+		textButton.addActionListener(new ChatListener());
 	}
 }
