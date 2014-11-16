@@ -68,7 +68,7 @@ public class Window implements Runnable
 					{
 						String command;
 						if(text.contains(" "))
-							command = text.substring(0, text.indexOf(" "));
+							command = text.substring(1, text.indexOf(" "));
 						else
 							command = text;
 						
